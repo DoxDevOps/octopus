@@ -14,8 +14,7 @@ def queued_item_created(sender, instance, created, **kwargs):
         # [TODO] Check if routes are available. Start checking for the high weighted going down
         # [TODO] If default routes are NOT available default to SMS route
         sms = transmissions.TextMessage(
-            os.environ.get("INBOUND_SMS_SHORT_CODE", "SOME-VERY-COOL-NUMBER"),
-            "0999111222",
+            os.environ.get("INBOUND_SMS_SHORT_CODE", "0999111222")
         )
         sms.connect_phone()
         sms.send_message()
