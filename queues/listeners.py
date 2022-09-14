@@ -1,3 +1,4 @@
+import os
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from routes.models import Route
@@ -12,7 +13,10 @@ def queued_item_created(sender, instance, created, **kwargs):
         # [TODO] Add items to a "real" queue like Celery?
         # [TODO] Check if routes are available. Start checking for the high weighted going down
         # [TODO] If default routes are NOT available default to SMS route
-        sms = transmissions.TextMessage("0998006237", "This is the message to send.")
+        sms = transmissions.TextMessage(
+            os.environ.get("INBOUND_SMS_SHORT_CODE", "SOME-VERY-COOL-NUMBER"),
+            "0999111222",
+        )
         sms.connect_phone()
         sms.send_message()
         sms.disconnect_phone()
