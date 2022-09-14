@@ -6,4 +6,4 @@ class QueueError(Exception):
 
 
 class SourceNotFound(QueueError):
-    """Flags a missing cloud service class"""
+    """Flags missing payload source"""
