@@ -6,7 +6,7 @@ from . import models, transmissions
 
 
 @receiver(post_save, sender=models.QueueItem)
-def queued_item_created(sender, instance, created, **kwargs):
+def queue_item_created(sender, instance, created, **kwargs):
     """runs when an item is created in the queue"""
 
     if created:
