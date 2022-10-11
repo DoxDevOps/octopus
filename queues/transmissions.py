@@ -1,9 +1,14 @@
+import os
 import serial
 import time
 
 
 class TextMessage:
-    def __init__(self, recipient="0998006237", message="TextMessage.content not set."):
+    def __init__(
+        self,
+        recipient=os.environ.get("INBOUND_SMS_SHORT_CODE", "0999111222"),
+        message="TextMessage.content not set.",
+    ):
         self.recipient = recipient
         self.content = message
 
@@ -14,6 +19,7 @@ class TextMessage:
         self.content = message
 
     def connect_phone(self):
+        # [TODO] Need to remove hard-coded device path
         self.ser = serial.Serial("/dev/ttyUSB0", 460800, timeout=5)
         time.sleep(1)
 
