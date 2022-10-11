@@ -11,8 +11,9 @@ def queued_item_created(sender, instance, created, **kwargs):
 
     if created:
         # [TODO] Add items to a "real" queue like Celery?
-        # [TODO] Check if routes are available. Start checking for the high weighted going down
+        # [TODO] Check if routes other are available. Start checking for the high weighted going down
         # [TODO] If default routes are NOT available default to SMS route
+
         sms = transmissions.TextMessage(
             os.environ.get("INBOUND_SMS_SHORT_CODE", "0999111222")
         )

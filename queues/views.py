@@ -20,4 +20,4 @@ class ItemQueueViewSet(viewsets.ModelViewSet):
 
             item_queue: models.QueueItem = serializer.save()
 
-            # logger.info("Queued item from %s", item_queue.source.get_source_name)
+            logger.info("Queued item from %s", item_queue.source.get_source_name)

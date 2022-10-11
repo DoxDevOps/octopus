@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
-from . import RouteStatus
+from . import RouteStatus, RouteType
 
 
 class UuidField(models.CharField):
@@ -34,15 +34,18 @@ class Route(BaseModel):
     """Connectivity route between two sites"""
 
     name = models.CharField(
-        max_length=255, null=True, help_text="The name of the route between points"
+        max_length=255, null=True, help_text="The name of the route between two nodes"
     )
     description = models.TextField(
         null=True,
         blank=True,
-        help_text="You can include tech of the route. For example SMS route or EGPAF WAN route",
+        help_text="Describe your route. For example SMS route or EGPAF WAN route",
     )
+    type = models.CharField(choices=RouteType.CHOICES, max_length=255, null=True)
     weight = models.IntegerField(
-        default=1, unique=True, help_text="A route should have a unique weighting"
+        default=1,
+        unique=True,
+        help_text="A route should have a unique weighting. No two routes can have same weighting.",
     )
     status = models.CharField(
         choices=RouteStatus.CHOICES,
@@ -51,7 +54,12 @@ class Route(BaseModel):
         blank=True,
         default=RouteStatus.UNKNOWN,
     )
-    address = models.CharField(max_length=255, null=True, blank=True)
+    address = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        help_text="This can be a default gateway or anything similar that can ascertain if a route is UP.",
+    )
 
     class Meta:
         ordering = ["-created_at"]
@@ -79,7 +87,12 @@ class Route(BaseModel):
 
     @property
     def is_route_available(self) -> bool:
-        """Checks if route status is UP"""
+        """
+        Checks if route status is UP
+
+        [TODO] The idea is to have a separate service checking the availability of the route and updating this field
+        However, for now we simply ping the gateway of the route to check if its available
+        """
 
         if self.status != RouteStatus.UP:
             return False
