@@ -1,8 +1,11 @@
+import os
+
 from django.db import models
 from routes.models import BaseModel
 from django.core.exceptions import ObjectDoesNotExist
+
+
 from . import QueueStatus
-import os
 
 
 class Source(BaseModel):
@@ -12,7 +15,6 @@ class Source(BaseModel):
     description = models.TextField(null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     default_destination = models.CharField(max_length=255, null=True, blank=True)
-    default_retry_count_allowed = models.IntegerField(default=3)
 
     class Meta:
         ordering = ["-created_at"]
@@ -30,13 +32,15 @@ class Source(BaseModel):
     def get_source_name(self) -> str:
         "Returns the name of the source."
 
-        return self.first_name
+        return self.name
 
     @property
     def get_default_destination(self) -> str:
         """Returns the default destination"""
 
         return self.default_destination
+
+    __repr__ = __str__
 
 
 class QueueItem(BaseModel):
@@ -53,7 +57,6 @@ class QueueItem(BaseModel):
         blank=True,
         default=QueueStatus.QUEUED,
     )
-    retries_allowed = models.IntegerField(default=3)
     retry_attempt_count = models.IntegerField(default=0)
 
     class Meta:
@@ -64,9 +67,6 @@ class QueueItem(BaseModel):
             return f"Item from {self.source.name}"
         except ObjectDoesNotExist:
             return "Unknown queue item"
-
-    def __repr__(self) -> str:
-        return super().__repr__()
 
     @property
     def get_allowed_retries(self):
@@ -87,3 +87,5 @@ class QueueItem(BaseModel):
         key = os.environ.get("ENCRYPTION_KEY", "SOME-VERY-COMPLICATED-ENCYPTION-KEY")
         fernet = Fernet(key)
         return fernet.encrypt(self.payload.encode())
+
+    __repr__ = __str__
