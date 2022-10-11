@@ -46,7 +46,7 @@ class QueueItem(BaseModel):
     """Queued items"""
 
     source = models.ForeignKey(Source, on_delete=models.SET_NULL, null=True)
-    destination = models.CharField(max_length=255, null=True)
+    destination = models.CharField(max_length=255, null=True, blank=True)
     payload = models.TextField(null=True, blank=True)
     encrypt_before_sending = models.BooleanField(default=True, verbose_name="encrypt")
     status = models.CharField(
@@ -71,12 +71,12 @@ class QueueItem(BaseModel):
 
     @property
     def get_allowed_retries(self) -> int:
-        """Get how many times we should try to send the data to the destination"""
+        """Get how many times we should try to send the data from the queue to the destination"""
 
         if self.source.default_retry_allowed > os.environ.get(
             "DEFAULT_PUSH_RETRIES", 1
         ):
-            return self.source.default_retry_count_allowed
+            return self.source.default_retry_allowed
 
         return os.environ.get("DEFAULT_PUSH_RETRIES", 1)
 
