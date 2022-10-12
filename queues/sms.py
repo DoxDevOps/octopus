@@ -2,13 +2,15 @@ from time import sleep
 import serial
 from curses import ascii
 
-"""Run this file in your shell, the aim for this script is to try and allow you to
-    send, read and delete messages from python, after playing around with this for a while i have
-    realised that the most importain thing is good signal strength at the modem. For a full list of
-    fuctions that a GSM modem is capable of google Haynes AT+ commands
+"""
+Run this file in your shell, the aim for this script is to try and allow you to
+send, read and delete messages from python, after playing around with this for a while i have
+realised that the most importain thing is good signal strength at the modem. For a full list of
+fuctions that a GSM modem is capable of google Haynes AT+ commands
 
-    I have put the sleep function into many of the functions found within this script as it give the modem time
-    to receive all the messages from the Mobile Network Operators servers"""
+I have put the sleep function into many of the functions found within this script as it give the modem time
+to receive all the messages from the Mobile Network Operators servers
+"""
 
 ##set serial
 ser = serial.Serial()
