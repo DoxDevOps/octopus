@@ -45,6 +45,11 @@ class Source(BaseModel):
 class QueueItem(BaseModel):
     """Queued items"""
 
+    item_id = models.CharField(
+        max_length=255,
+        unique=True,
+        help_text="ID usually created by source app to uniquely identify this item",
+    )
     source = models.ForeignKey(Source, on_delete=models.SET_NULL, null=True)
     destination = models.CharField(max_length=255, null=True, blank=True)
     payload = models.TextField(null=True, blank=True)
