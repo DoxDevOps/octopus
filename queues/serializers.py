@@ -1,6 +1,5 @@
-from ipaddress import ip_address
 from rest_framework import serializers
-from . import models, utils
+from . import models, utils, exceptions
 import logging
 
 
@@ -9,9 +8,8 @@ class ItemQueueSerializer(serializers.HyperlinkedModelSerializer):
         model = models.QueueItem
         fields = [
             "id",
-            "destination",
+            "item_id",
             "payload",
-            "encrypt_before_sending",
         ]
 
     def create(self, validated_data):
@@ -20,6 +18,18 @@ class ItemQueueSerializer(serializers.HyperlinkedModelSerializer):
 
         logging.info("Trying to find source for %s", ip_address)
 
-        validated_data["source"] = utils.get_source_from_ip(ip_address)
+        try:
+
+            validated_data["source"] = utils.get_source_from_ip(ip_address)
+
+            logging.info(
+                "The IP address, %s, is mapped to %s as it's source",
+                ip_address,
+                validated_data["source"],
+            )
+
+        except exceptions.SourceNotFound:
+            logging.info("No registered source for %s", ip_address)
+            return
 
         return super().create(validated_data)

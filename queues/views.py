@@ -12,6 +12,7 @@ class ItemQueueViewSet(viewsets.ModelViewSet):
     """Item queuing"""
 
     queryset = models.QueueItem.objects.all().order_by("-created_at")
+
     serializer_class = serializers.ItemQueueSerializer
 
     def perform_create(self, serializer: serializers.ItemQueueSerializer):
